@@ -7,6 +7,7 @@ import com.enigmacamp.koperasiKita.model.Product;
 import com.enigmacamp.koperasiKita.repository.ProductRepository;
 import com.enigmacamp.koperasiKita.service.ProductService;
 import com.enigmacamp.koperasiKita.specification.ProductSpecification;
+import com.enigmacamp.koperasiKita.utils.exception.ProductNameDuplicateException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,10 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductResponse create(Product product) {
         validate(product);
+
+        if (productRepository.existByName(product.getName())) {
+            throw new ProductNameDuplicateException("Product Name Already Exist");
+        }
 
         product.setCreatedAt(LocalDateTime.now());
 
@@ -70,7 +75,10 @@ public class ProductServiceImpl implements ProductService {
 
         Product updatedProduct = oldProduct.get();
 
-        updatedProduct.setName(product.getName());
+        if (!updatedProduct.getName().equals(product.getName())) {
+            updatedProduct.setName(product.getName());
+        }
+
         updatedProduct.setDescription(product.getDescription());
         updatedProduct.setPrice(product.getPrice());
         updatedProduct.setCategory(product.getCategory());
@@ -155,6 +163,14 @@ public class ProductServiceImpl implements ProductService {
 
         if (product.getStock() == null || product.getStock() <= 0) {
             throw new IllegalArgumentException("Product Stock Cannot Be Empty Or Smaller Than Or Equal To Zero");
+        }
+
+        if (product.getIsAvailable() == null || product.getIsAvailable().toString().isEmpty()) {
+            throw new IllegalArgumentException("Product is Available Criteria Cannot Be Empty");
+        }
+
+        if (!product.getIsAvailable().toString().equalsIgnoreCase("true") && !product.getIsAvailable().toString().equalsIgnoreCase("false")) {
+            throw new IllegalArgumentException("Product is Available Criteria Is Not Valid, Filled It With true or false");
         }
     }
 }

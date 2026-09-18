@@ -78,15 +78,25 @@ public class ProductController {
     public ResponseEntity<CommonResponse<List<ProductResponse>>> searchWithPaging(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String category,
+            @RequestParam(required = false) String maxPrice,
+            @RequestParam(required = false) String minPrice,
+            @RequestParam(required = false) String minStock,
+            @RequestParam(required = false) String isAvailable,
 
+            //For Pagination
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String direction
     ) {
+
         SearchProductRequest request = SearchProductRequest.builder()
                 .name(name)
                 .category(category)
+                .maxPrice(maxPrice)
+                .minPrice(minPrice)
+                .minStock(minStock)
+                .isAvailable(isAvailable)
                 .page(page)
                 .size(size)
                 .sortBy(sortBy)

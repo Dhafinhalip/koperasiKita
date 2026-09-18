@@ -5,6 +5,7 @@ import com.enigmacamp.koperasiKita.model.Product;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,27 @@ public class ProductSpecification {
 
             if (request.getIsAvailable() != null && !request.getIsAvailable().isEmpty()) {
                 predicates.add(criteriaBuilder.equal(criteriaBuilder.lower(root.get("isAvailable")), request.getIsAvailable().toLowerCase()));
+            }
+
+            //minimum price
+            if (request.getMinPrice() != null && !request.getMinPrice().isEmpty()) {
+                BigDecimal price = new BigDecimal(request.getMinPrice());
+
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), price));
+            }
+
+            //maximum price
+            if (request.getMaxPrice() != null && !request.getMaxPrice().isEmpty()) {
+                BigDecimal price = new BigDecimal(request.getMaxPrice());
+
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), price));
+            }
+
+            //minimum stock
+            if (request.getMinPrice() != null && !request.getMinPrice().isEmpty()) {
+                Integer stock = Integer.parseInt(request.getMinPrice());
+
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("stock"), stock));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

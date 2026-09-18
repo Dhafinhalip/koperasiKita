@@ -13,9 +13,10 @@ import java.math.BigDecimal;
 @Builder
 public class SearchProductRequest {
     private String name;
-    private String price;
     private String category;
-    private String stock;
+    private String maxPrice;
+    private String minPrice;
+    private String minStock;
     private String isAvailable;
 
     private Integer page;
