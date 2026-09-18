@@ -8,6 +8,7 @@ import java.util.List;
 public class ProductMapper {
     public static ProductResponse convertToProductResponse(Product product) {
         return ProductResponse.builder()
+                .id(product.getId())
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())

@@ -1,7 +1,6 @@
 package com.enigmacamp.koperasiKita.service.impl;
 
 import com.enigmacamp.koperasiKita.dto.request.SearchProductRequest;
-import com.enigmacamp.koperasiKita.dto.response.CommonResponse;
 import com.enigmacamp.koperasiKita.dto.response.ProductResponse;
 import com.enigmacamp.koperasiKita.mapper.ProductMapper;
 import com.enigmacamp.koperasiKita.model.Product;
@@ -13,11 +12,16 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Service
+@Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
@@ -27,9 +31,11 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
+    @Transactional
     public ProductResponse create(Product product) {
-
         validate(product);
+
+        product.setCreatedAt(LocalDateTime.now());
 
         product.setCreatedBy("system");
 
@@ -54,6 +60,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductResponse updateById(Long id, Product product) {
         Optional<Product> oldProduct = productRepository.findById(id);
 
@@ -69,6 +76,7 @@ public class ProductServiceImpl implements ProductService {
         updatedProduct.setCategory(product.getCategory());
         updatedProduct.setStock(product.getStock());
         updatedProduct.setIsAvailable(product.getIsAvailable());
+        updatedProduct.setUpdatedAt(LocalDateTime.now());
         updatedProduct.setUpdatedBy("system");
 
         validate(updatedProduct);
@@ -80,6 +88,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
+    @Transactional
     public ProductResponse deleteById(Long id) {
 
         if (id == null || id <= 0) {
@@ -94,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.deleteById(id);
 
-        return ProductMapper.convertToProductResponse(product.get());
+        return null;
     }
 
     @Override
