@@ -1,10 +1,14 @@
 package com.enigmacamp.koperasiKita.service.impl;
 
+import com.enigmacamp.koperasiKita.dto.request.SearchProductRequest;
+import com.enigmacamp.koperasiKita.dto.response.ProductResponse;
 import com.enigmacamp.koperasiKita.model.Product;
 import com.enigmacamp.koperasiKita.repository.ProductRepository;
 import com.enigmacamp.koperasiKita.service.ProductService;
+import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 public class ProductServiceImpl implements ProductService {
@@ -19,6 +23,8 @@ public class ProductServiceImpl implements ProductService {
     public Product create(Product product) {
 
         validate(product);
+
+        product.setCreatedBy("system");
 
         return productRepository.save(product);
     }
@@ -42,6 +48,14 @@ public class ProductServiceImpl implements ProductService {
 
         Product updatedProduct = oldProduct.get();
 
+        updatedProduct.setName(product.getName());
+        updatedProduct.setDescription(product.getDescription());
+        updatedProduct.setPrice(product.getPrice());
+        updatedProduct.setCategory(product.getCategory());
+        updatedProduct.setStock(product.getStock());
+        updatedProduct.setIsAvailable(product.getIsAvailable());
+        updatedProduct.setUpdatedBy("system");
+
         validate(updatedProduct);
 
         return productRepository.save(updatedProduct);
@@ -56,6 +70,16 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ProductResponse> searchProducts(SearchProductRequest request) {
+        return List.of();
+    }
+
+    @Override
+    public Page<ProductResponse> searchProductWithPagination(SearchProductRequest request) {
+        return null;
     }
 
     private void validate(Product product) {
