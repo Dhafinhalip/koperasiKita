@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    Product create(Product product);
-    Optional<Product> getById(Long id);
-    Product updateById(Long id, Product product);
-    void deleteById(Long id);
+    ProductResponse create(Product product);
+    ProductResponse getById(Long id);
+    ProductResponse updateById(Long id, Product product);
+    ProductResponse deleteById(Long id);
     List<ProductResponse> searchProducts(SearchProductRequest request);
     Page<ProductResponse> searchProductWithPagination(SearchProductRequest request);
 }

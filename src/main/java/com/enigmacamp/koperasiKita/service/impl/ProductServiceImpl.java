@@ -1,11 +1,18 @@
 package com.enigmacamp.koperasiKita.service.impl;
 
 import com.enigmacamp.koperasiKita.dto.request.SearchProductRequest;
+import com.enigmacamp.koperasiKita.dto.response.CommonResponse;
 import com.enigmacamp.koperasiKita.dto.response.ProductResponse;
+import com.enigmacamp.koperasiKita.mapper.ProductMapper;
 import com.enigmacamp.koperasiKita.model.Product;
 import com.enigmacamp.koperasiKita.repository.ProductRepository;
 import com.enigmacamp.koperasiKita.service.ProductService;
+import com.enigmacamp.koperasiKita.specification.ProductSpecification;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,27 +27,35 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Product create(Product product) {
+    public ProductResponse create(Product product) {
 
         validate(product);
 
         product.setCreatedBy("system");
 
-        return productRepository.save(product);
+        Product saveProduct = productRepository.save(product);
+
+        return ProductMapper.convertToProductResponse(saveProduct);
     }
 
     @Override
-    public Optional<Product> getById(Long id) {
+    public ProductResponse getById(Long id) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("ID Cannot Be Empty Or Smaller Than Or Equal To Zero");
         }
 
-        return productRepository.findById(id);
+        Optional<Product> product = productRepository.findById(id);
+
+        if (product.isEmpty()) {
+            throw new NullPointerException("Product With ID " + id + " Not Found");
+        }
+
+        return ProductMapper.convertToProductResponse(product.get());
     }
 
     @Override
-    public Product updateById(Long id, Product product) {
-        Optional<Product> oldProduct = getById(id);
+    public ProductResponse updateById(Long id, Product product) {
+        Optional<Product> oldProduct = productRepository.findById(id);
 
         if (oldProduct.isEmpty()) {
             throw new NullPointerException("Product With ID " + product.getId() + " Not Found");
@@ -58,28 +73,57 @@ public class ProductServiceImpl implements ProductService {
 
         validate(updatedProduct);
 
-        return productRepository.save(updatedProduct);
+        Product newProduct = productRepository.save(updatedProduct);
+
+        return ProductMapper.convertToProductResponse(newProduct);
     }
 
 
     @Override
-    public void deleteById(Long id) {
+    public ProductResponse deleteById(Long id) {
 
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Product Stock Cannot Be Empty Or Smaller Than Or Equal To Zero");
         }
 
+        Optional<Product> product = productRepository.findById(id);
+
+        if (product.isEmpty()) {
+            throw new NullPointerException("Product With ID " + id + " Not Found");
+        }
+
         productRepository.deleteById(id);
+
+        return ProductMapper.convertToProductResponse(product.get());
     }
 
     @Override
     public List<ProductResponse> searchProducts(SearchProductRequest request) {
-        return List.of();
+        Specification<Product> specification = ProductSpecification.getSpesification(request);
+
+        List<Product> products = productRepository.findAll(specification);
+
+        return ProductMapper.convertToListOfProductResponse(products);
     }
 
     @Override
     public Page<ProductResponse> searchProductWithPagination(SearchProductRequest request) {
-        return null;
+        int page = (request.getPage() == null || request.getPage() <=0) ? 0 : request.getPage() - 1;
+        int size = (request.getPage() == null || request.getPage() <=0) ? 10 : request.getSize();
+        String sortBy = (request.getSortBy() == null || request.getSortBy().isEmpty())? "name" : request.getSortBy();
+        String direction = (request.getDirection() == null || request.getDirection().isEmpty()) ? "asc" : request.getDirection();
+
+        Specification<Product> specification = ProductSpecification.getSpesification(request);
+
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+
+        Page<Product> productPage = productRepository.findAll(specification, pageRequest);
+
+        List<ProductResponse> productResponses = ProductMapper.convertToListOfProductResponse(productPage.getContent());
+
+        return new PageImpl<>(productResponses, pageRequest, productPage.getTotalElements());
     }
 
     private void validate(Product product) {

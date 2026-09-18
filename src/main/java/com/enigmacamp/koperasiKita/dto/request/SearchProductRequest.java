@@ -13,10 +13,13 @@ import java.math.BigDecimal;
 @Builder
 public class SearchProductRequest {
     private String name;
-    private String description;
-    private BigDecimal price;
+    private String price;
     private String category;
-    private Integer stock;
-    private Boolean isAvailable;
-    private String createdAt;
+    private String stock;
+    private String isAvailable;
+
+    private Integer page;
+    private Integer size;
+    private String sortBy;
+    private String direction;
 }
