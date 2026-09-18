@@ -21,6 +21,10 @@ public class ProductSpecification {
                 predicates.add(criteriaBuilder.equal(criteriaBuilder.upper(root.get("category")), request.getCategory().toUpperCase()));
             }
 
+            if (request.getIsAvailable() != null && !request.getIsAvailable().isEmpty()) {
+                predicates.add(criteriaBuilder.equal(criteriaBuilder.lower(root.get("isAvailable")), request.getIsAvailable().toLowerCase()));
+            }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 
         });

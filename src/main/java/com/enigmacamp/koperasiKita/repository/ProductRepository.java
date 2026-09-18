@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
-//    @Query("SELECT p FROM Product p WHERE MAX(p.price) LIMIT 1")
+//    @Query("SELECT MAX()")
 
 }
