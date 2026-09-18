@@ -30,7 +30,7 @@ public class ResponseUtil {
                 .statusCode(httpStatus.value())
                 .message(message)
                 .data(data)
-                .pagingResponse(pagingResponse)
+                .paging(pagingResponse)
                 .build();
         return ResponseEntity.status(httpStatus).body(response);
     }
