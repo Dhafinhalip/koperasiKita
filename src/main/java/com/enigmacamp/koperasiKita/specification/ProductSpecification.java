@@ -50,7 +50,7 @@ public class ProductSpecification {
             if (request.getMinPrice() != null && !request.getMinPrice().isEmpty()) {
                 int stock = Integer.parseInt(request.getMinPrice());
 
-                if (stock > 0 ) {
+                if (stock > 0) {
                     predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("stock"), stock));
                 }
             }

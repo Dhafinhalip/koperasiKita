@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,10 +38,6 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.existByName(product.getName())) {
             throw new ProductNameDuplicateException("Product Name Already Exist");
         }
-
-        product.setCreatedAt(LocalDateTime.now());
-
-        product.setCreatedBy("system");
 
         Product saveProduct = productRepository.save(product);
 
@@ -84,8 +79,6 @@ public class ProductServiceImpl implements ProductService {
         updatedProduct.setCategory(product.getCategory());
         updatedProduct.setStock(product.getStock());
         updatedProduct.setIsAvailable(product.getIsAvailable());
-        updatedProduct.setUpdatedAt(LocalDateTime.now());
-        updatedProduct.setUpdatedBy("system");
 
         validate(updatedProduct);
 
