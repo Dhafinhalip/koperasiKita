@@ -30,21 +30,29 @@ public class ProductSpecification {
             if (request.getMinPrice() != null && !request.getMinPrice().isEmpty()) {
                 BigDecimal price = new BigDecimal(request.getMinPrice());
 
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), price));
+                if (price.compareTo(BigDecimal.ZERO) > 0) {
+                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), price));
+                }
+
             }
 
             //maximum price
             if (request.getMaxPrice() != null && !request.getMaxPrice().isEmpty()) {
                 BigDecimal price = new BigDecimal(request.getMaxPrice());
 
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), price));
+                if (price.compareTo(BigDecimal.ZERO) > 0) {
+                    predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), price));
+                }
+
             }
 
             //minimum stock
             if (request.getMinPrice() != null && !request.getMinPrice().isEmpty()) {
-                Integer stock = Integer.parseInt(request.getMinPrice());
+                int stock = Integer.parseInt(request.getMinPrice());
 
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("stock"), stock));
+                if (stock > 0 ) {
+                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("stock"), stock));
+                }
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
