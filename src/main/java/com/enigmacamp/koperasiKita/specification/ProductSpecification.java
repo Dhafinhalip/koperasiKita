@@ -15,24 +15,24 @@ public class ProductSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             if (request.getName() != null && !request.getName().isEmpty()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + request.getName() + "%"));
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + request.getName().toLowerCase() + "%"));
             }
 
             if (request.getCategory() != null && !request.getCategory().isEmpty()) {
                 predicates.add(criteriaBuilder.equal(criteriaBuilder.upper(root.get("category")), request.getCategory().toUpperCase()));
             }
 
-            if (request.getIsAvailable() != null && !request.getIsAvailable().isEmpty() && (request.getIsAvailable().equalsIgnoreCase("true") || !request.getIsAvailable().equalsIgnoreCase("false"))) {
+            if (request.getIsAvailable() != null && !request.getIsAvailable().isEmpty() && (request.getIsAvailable().equalsIgnoreCase("true") || request.getIsAvailable().equalsIgnoreCase("false"))) {
                 boolean isAvailableInput = Boolean.parseBoolean(request.getIsAvailable());
                 predicates.add(criteriaBuilder.equal(root.get("isAvailable"), isAvailableInput));
             }
 
             //minimum price
             if (request.getMinPrice() != null && !request.getMinPrice().isEmpty()) {
-                BigDecimal price = new BigDecimal(request.getMinPrice());
+                BigDecimal minPrice = new BigDecimal(request.getMinPrice());
 
-                if (price.compareTo(BigDecimal.ZERO) > 0) {
-                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), price));
+                if (minPrice.compareTo(BigDecimal.ZERO) > 0) {
+                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
                 }
 
             }
@@ -48,8 +48,8 @@ public class ProductSpecification {
             }
 
             //minimum stock
-            if (request.getMinPrice() != null && !request.getMinPrice().isEmpty()) {
-                int stock = Integer.parseInt(request.getMinPrice());
+            if (request.getMinStock() != null && !request.getMinStock().isEmpty()) {
+                int stock = Integer.parseInt(request.getMinStock());
 
                 if (stock > 0) {
                     predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("stock"), stock));
