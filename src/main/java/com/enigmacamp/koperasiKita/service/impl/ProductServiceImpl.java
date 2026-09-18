@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse create(Product product) {
         validate(product);
 
-        if (productRepository.existByName(product.getName())) {
+        if (productRepository.findByName(product.getName()) != null) {
             throw new ProductNameDuplicateException("Product Name Already Exist");
         }
 
@@ -71,9 +71,9 @@ public class ProductServiceImpl implements ProductService {
 
         Product updatedProduct = oldProduct.get();
 
-        Product productByName = productRepository.findByName(updatedProduct.getName());
+        Product productByName = productRepository.findByName(product.getName());
 
-        if (!Objects.equals(updatedProduct.getId(), productByName.getId())) {
+        if ( productByName != null && !Objects.equals(updatedProduct.getId(), productByName.getId())) {
             throw new ProductNameDuplicateException("Product Name Already Exist");
         }
 
@@ -158,7 +158,7 @@ public class ProductServiceImpl implements ProductService {
             throw new IllegalArgumentException("Product Category Cannot Be Empty");
         }
 
-        if (product.getStock() == null || product.getStock() <= 0) {
+        if (product.getStock() == null || product.getStock() < 0) {
             throw new IllegalArgumentException("Product Stock Cannot Be Empty Or Smaller Than Or Equal To Zero");
         }
 
