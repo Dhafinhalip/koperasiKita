@@ -15,15 +15,16 @@ public class ProductSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             if (request.getName() != null && !request.getName().isEmpty()) {
-                predicates.add(criteriaBuilder.like(root.get("name"), "%" + request.getName() + "%"));
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + request.getName() + "%"));
             }
 
             if (request.getCategory() != null && !request.getCategory().isEmpty()) {
                 predicates.add(criteriaBuilder.equal(criteriaBuilder.upper(root.get("category")), request.getCategory().toUpperCase()));
             }
 
-            if (request.getIsAvailable() != null && !request.getIsAvailable().isEmpty()) {
-                predicates.add(criteriaBuilder.equal(criteriaBuilder.lower(root.get("isAvailable")), request.getIsAvailable().toLowerCase()));
+            if (request.getIsAvailable() != null && !request.getIsAvailable().isEmpty() && (request.getIsAvailable().equalsIgnoreCase("true") || !request.getIsAvailable().equalsIgnoreCase("false"))) {
+                boolean isAvailableInput = Boolean.parseBoolean(request.getIsAvailable());
+                predicates.add(criteriaBuilder.equal(root.get("isAvailable"), isAvailableInput));
             }
 
             //minimum price
