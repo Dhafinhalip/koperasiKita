@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -70,10 +71,13 @@ public class ProductServiceImpl implements ProductService {
 
         Product updatedProduct = oldProduct.get();
 
-        if (!updatedProduct.getName().equals(product.getName())) {
-            updatedProduct.setName(product.getName());
+        Product productByName = productRepository.findByName(updatedProduct.getName());
+
+        if (!Objects.equals(updatedProduct.getId(), productByName.getId())) {
+            throw new ProductNameDuplicateException("Product Name Already Exist");
         }
 
+        updatedProduct.setName(product.getName());
         updatedProduct.setDescription(product.getDescription());
         updatedProduct.setPrice(product.getPrice());
         updatedProduct.setCategory(product.getCategory());
