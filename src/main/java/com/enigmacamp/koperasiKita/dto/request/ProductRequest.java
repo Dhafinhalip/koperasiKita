@@ -15,22 +15,26 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 public class ProductRequest {
-    @NotBlank
+    @NotNull (message = "Product Name Cannot Be Empty")
+    @NotBlank (message = "Product Name Cannot Be Empty")
     private String name;
 
-    @NotBlank
+    @NotNull (message = "Product Description Cannot Be Empty")
+    @NotBlank (message = "Product Description Cannot Be Empty")
     private String description;
 
-    @NotNull
+    @NotNull (message = "Product Price Cannot Be NULL")
     @Min(0)
     private BigDecimal price;
 
-    @NotBlank
+    @NotNull (message = "Product Cateogory Cannot Be Empty")
+    @NotBlank (message = "Product Category Cannot Be Empty")
     private String category;
 
-    @NotNull
-    @Min(0)
+    @NotNull (message = "Product Stock Cannot Be Empty")
+    @Min(value = 0, message = "Product Stock Cannot Be Minus")
     private Integer stock;
 
-    private Boolean isAvailable;
+    @NotNull (message = "Product Available Note Cannot Be Empty")
+    private String isAvailable;
 }

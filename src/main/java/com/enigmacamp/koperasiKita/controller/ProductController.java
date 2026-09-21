@@ -34,7 +34,7 @@ public class ProductController {
                 .price(request.getPrice())
                 .category(request.getCategory())
                 .stock(request.getStock())
-                .isAvailable(request.getIsAvailable())
+                .isAvailable(Boolean.parseBoolean(request.getIsAvailable()))
                 .build();
 
         ProductResponse productResponse = productService.create(product);
@@ -59,7 +59,7 @@ public class ProductController {
                 .price(request.getPrice())
                 .category(request.getCategory())
                 .stock(request.getStock())
-                .isAvailable(request.getIsAvailable())
+                .isAvailable(Boolean.parseBoolean(request.getIsAvailable()))
                 .build();
 
         ProductResponse productResponse = productService.updateById(id, product);
