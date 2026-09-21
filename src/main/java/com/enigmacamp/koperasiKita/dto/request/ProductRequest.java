@@ -32,6 +32,5 @@ public class ProductRequest {
     @Min(0)
     private Integer stock;
 
-    @NotBlank
     private Boolean isAvailable;
 }
