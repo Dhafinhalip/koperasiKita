@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class ProductController {
 
     //Create Data
     @PostMapping
-    public ResponseEntity<CommonResponse<ProductResponse>> createProduct(@Valid @RequestBody ProductRequest request) {
+    public ResponseEntity<CommonResponse<ProductResponse>> createProduct(@Validated @RequestBody ProductRequest request) {
         Product product = Product.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -52,7 +53,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<ProductResponse>> updateProductById(@PathVariable Long id, @Valid @RequestBody ProductRequest request) {
+    public ResponseEntity<CommonResponse<ProductResponse>> updateProductById(@PathVariable Long id, @Validated @RequestBody ProductRequest request) {
         Product product = Product.builder()
                 .name(request.getName())
                 .description(request.getDescription())
