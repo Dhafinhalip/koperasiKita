@@ -8,7 +8,6 @@ import com.enigmacamp.koperasiKita.model.Product;
 import com.enigmacamp.koperasiKita.service.ProductService;
 import com.enigmacamp.koperasiKita.utils.ResponseUtil;
 import com.enigmacamp.koperasiKita.utils.constant.ResponseMessage;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
