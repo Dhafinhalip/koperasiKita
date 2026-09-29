@@ -8,6 +8,7 @@ import com.enigmacamp.koperasiKita.model.Product;
 import com.enigmacamp.koperasiKita.service.ProductService;
 import com.enigmacamp.koperasiKita.utils.ResponseUtil;
 import com.enigmacamp.koperasiKita.utils.constant.ResponseMessage;
+import com.enigmacamp.koperasiKita.utils.validators.ValidationGroups;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class ProductController {
 
     //Create Data
     @PostMapping
-    public ResponseEntity<CommonResponse<ProductResponse>> createProduct(@Validated @RequestBody ProductRequest request) {
+    public ResponseEntity<CommonResponse<ProductResponse>> createProduct(@Validated(ValidationGroups.onCreate.class) @RequestBody ProductRequest request) {
         Product product = Product.builder()
                 .name(request.getName())
                 .description(request.getDescription())

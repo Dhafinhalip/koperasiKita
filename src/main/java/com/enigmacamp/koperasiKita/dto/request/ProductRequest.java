@@ -26,7 +26,7 @@ public class ProductRequest {
     private String description;
 
     @NotNull (message = "Product Price Cannot Be NULL", groups = {ValidationGroups.onCreate.class, ValidationGroups.onUpdate.class})
-    @Min(0)
+    @Min(0)  @Min(value = 0, message = "Product Stock Cannot Be Minus", groups = {ValidationGroups.onCreate.class, ValidationGroups.onUpdate.class})
     private BigDecimal price;
 
     @NotNull (message = "Product Cateogory Cannot Be Null", groups = {ValidationGroups.onCreate.class, ValidationGroups.onUpdate.class})
@@ -38,6 +38,6 @@ public class ProductRequest {
     private Integer stock;
 
     @NotNull (message = "Product Available Note Cannot Be Empty", groups = {ValidationGroups.onCreate.class, ValidationGroups.onUpdate.class})
-    @ValidProductAvailable
+    @ValidProductAvailable (groups = {ValidationGroups.onCreate.class, ValidationGroups.onUpdate.class})
     private String isAvailable;
 }

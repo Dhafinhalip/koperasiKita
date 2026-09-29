@@ -8,6 +8,7 @@ import com.enigmacamp.koperasiKita.repository.ProductRepository;
 import com.enigmacamp.koperasiKita.service.ProductService;
 import com.enigmacamp.koperasiKita.specification.ProductSpecification;
 import com.enigmacamp.koperasiKita.utils.exception.ProductNameDuplicateException;
+import com.enigmacamp.koperasiKita.utils.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +35,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponse create(Product product) {
-        validate(product);
 
         if (productRepository.findByName(product.getName()) != null) {
             throw new ProductNameDuplicateException("Product Name Already Exist");
@@ -51,13 +51,9 @@ public class ProductServiceImpl implements ProductService {
             throw new IllegalArgumentException("ID Cannot Be Empty Or Smaller Than Or Equal To Zero");
         }
 
-        Optional<Product> product = productRepository.findById(id);
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id));
 
-        if (product.isEmpty()) {
-            throw new NullPointerException("Product With ID " + id + " Not Found");
-        }
-
-        return ProductMapper.convertToProductResponse(product.get());
+        return ProductMapper.convertToProductResponse(product);
     }
 
     @Override
