@@ -8,6 +8,9 @@ import com.enigmacamp.koperasiKita.model.Product;
 import com.enigmacamp.koperasiKita.service.ProductService;
 import com.enigmacamp.koperasiKita.utils.ResponseUtil;
 import com.enigmacamp.koperasiKita.utils.constant.ResponseMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/products")
+@Tag(name = "Product", description = "Product endpoint")
 public class ProductController {
     private final ProductService productService;
 
@@ -25,6 +29,14 @@ public class ProductController {
     }
 
     //Create Data
+    @Operation(
+            summary = "Add New Product",
+            description = "Use this endpoint to add new product",
+            responses = {
+                    @ApiResponse(responseCode = "201",
+                    description = "Product added successfully")
+            }
+    )
     @PostMapping
     public ResponseEntity<CommonResponse<ProductResponse>> createProduct(@RequestBody ProductRequest request) {
         Product product = Product.builder()
@@ -42,6 +54,14 @@ public class ProductController {
     }
 
     //Get Data By Id
+    @Operation(
+            summary = "Find a Product by ID",
+            description = "Use this endpoint to find a product",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "Product found")
+            }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse<ProductResponse>> getProductById(@PathVariable Long id) {
 
@@ -50,6 +70,14 @@ public class ProductController {
         return ResponseUtil.buildResponse(HttpStatus.OK, ResponseMessage.SUCCESS_FOUND_DATA, productResponse);
     }
 
+    @Operation(
+            summary = "Update a Product by ID",
+            description = "Use this endpoint to update a product",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "Product updated")
+            }
+    )
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse<ProductResponse>> updateProductById(@PathVariable Long id,  @RequestBody ProductRequest request) {
         Product product = Product.builder()
@@ -66,6 +94,14 @@ public class ProductController {
         return ResponseUtil.buildResponse(HttpStatus.OK, ResponseMessage.SUCCESS_UPDATE_DATA, productResponse);
     }
 
+    @Operation(
+            summary = "Delete a Product by ID",
+            description = "Use this endpoint to delete a product",
+            responses = {
+                    @ApiResponse(responseCode = "404",
+                            description = "Product deleted")
+            }
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse<ProductResponse>> deleteProductById(@PathVariable Long id) {
 
@@ -74,6 +110,14 @@ public class ProductController {
         return ResponseUtil.buildResponse(HttpStatus.NOT_FOUND, ResponseMessage.FAILED_FOUND_DATA, productResponse);
     }
 
+    @Operation(
+            summary = "Search Products",
+            description = "Use this endpoint to find products by its name, category, max. price, min. price, min. stock, or availability",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "Products found")
+            }
+    )
     @GetMapping("/search")
     public ResponseEntity<CommonResponse<List<ProductResponse>>> searchWithPaging(
             @RequestParam(required = false) String name,
