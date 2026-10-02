@@ -3,18 +3,18 @@ services:
     image: postgres:alpine
     container_name: koperasiKita-db
     environment:
-      POSTGRES_DB: koperasi_kita
+      POSTGRES_DB: koperasi_kita_db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: DhafinHalip@555
+      POSTGRES_PASSWORD: kikiji123
     ports:
       - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/18/docker
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d koperasi_kita_db"]
       interval: 5s
       timeout: 5s
       retries: 5
-    volumes:
-      - pgdata:/var/lib/postgresql/18/docker
 
   app:
     build: .
@@ -24,10 +24,9 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: 5432
-      DB_NAME:  koperasi_kita
+      DB_NAME: koperasi_kita_db
       DB_USERNAME: postgres
-      DB_PASSWORD: DhafinHalip@555
-
+      DB_PASSWORD: kikiji123
     depends_on:
       db:
         condition: service_healthy
