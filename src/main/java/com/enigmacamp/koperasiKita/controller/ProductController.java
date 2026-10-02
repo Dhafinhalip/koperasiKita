@@ -8,12 +8,14 @@ import com.enigmacamp.koperasiKita.model.Product;
 import com.enigmacamp.koperasiKita.service.ProductService;
 import com.enigmacamp.koperasiKita.utils.ResponseUtil;
 import com.enigmacamp.koperasiKita.utils.constant.ResponseMessage;
+import com.enigmacamp.koperasiKita.utils.validators.ValidationGroups;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,14 +40,14 @@ public class ProductController {
             }
     )
     @PostMapping
-    public ResponseEntity<CommonResponse<ProductResponse>> createProduct(@RequestBody ProductRequest request) {
+    public ResponseEntity<CommonResponse<ProductResponse>> createProduct(@Validated(ValidationGroups.onCreate.class) @RequestBody ProductRequest request) {
         Product product = Product.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .price(request.getPrice())
                 .category(request.getCategory())
                 .stock(request.getStock())
-                .isAvailable(request.getIsAvailable())
+                .isAvailable(Boolean.parseBoolean(request.getIsAvailable()))
                 .build();
 
         ProductResponse productResponse = productService.create(product);
@@ -79,14 +81,14 @@ public class ProductController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<ProductResponse>> updateProductById(@PathVariable Long id,  @RequestBody ProductRequest request) {
+    public ResponseEntity<CommonResponse<ProductResponse>> updateProductById(@PathVariable Long id, @Validated @RequestBody ProductRequest request) {
         Product product = Product.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .price(request.getPrice())
                 .category(request.getCategory())
                 .stock(request.getStock())
-                .isAvailable(request.getIsAvailable())
+                .isAvailable(Boolean.parseBoolean(request.getIsAvailable()))
                 .build();
 
         ProductResponse productResponse = productService.updateById(id, product);
